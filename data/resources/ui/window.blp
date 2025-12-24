@@ -1,0 +1,108 @@
+using Gtk 4.0;
+
+template $NecdWindow: ApplicationWindow {
+  title: "ns-emu-cheats-downloader";
+  default-width: 800;
+  default-height: 600;
+
+  Box {
+    orientation: vertical;
+
+    StackSwitcher {
+      stack: stack;
+      halign: center;
+      margin-top: 6;
+      margin-bottom: 6;
+    }
+
+    Stack stack {
+      vexpand: true;
+
+      StackPage {
+        name: "database-explorer";
+        title: "Database Explorer";
+
+        child: Box {
+          orientation: vertical;
+          spacing: 12;
+          margin-top: 12;
+          margin-bottom: 12;
+          margin-start: 12;
+          margin-end: 12;
+
+          SearchEntry search_entry {
+            placeholder-text: "Search by name...";
+            hexpand: true;
+          }
+
+          ScrolledWindow {
+            vexpand: true;
+            hexpand: true;
+
+            ColumnView titles_view {
+              ColumnViewColumn id_column {
+                expand: false;
+                resizable: true;
+                fixed-width: 150;
+                id: "id";
+                title: "ID";
+              }
+
+              ColumnViewColumn name_column {
+                expand: true;
+                resizable: true;
+                fixed-width: 300;
+                id: "name";
+                title: "Name";
+              }
+
+              ColumnViewColumn release_date_column {
+                expand: false;
+                resizable: true;
+                fixed-width: 120;
+                id: "release_date";
+                title: "Release Date";
+              }
+
+              ColumnViewColumn publisher_column {
+                expand: true;
+                resizable: true;
+                fixed-width: 200;
+                id: "publisher";
+                title: "Publisher";
+              }
+            }
+          }
+        };
+      }
+
+      StackPage {
+        name: "cheat-manager";
+        title: "Cheat Manager";
+
+        child: Box {
+          orientation: vertical;
+          spacing: 12;
+          margin-top: 12;
+          margin-bottom: 12;
+          margin-start: 12;
+          margin-end: 12;
+
+          Picture icon {
+            width-request: 200;
+            height-request: 200;
+            can-shrink: true;
+            halign: center;
+          }
+
+          Label selected_title_label {
+            label: "No title selected";
+            halign: center;
+            wrap: true;
+            wrap-mode: word_char;
+          }
+        };
+      }
+    }
+  }
+}
