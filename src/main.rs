@@ -266,25 +266,40 @@ impl App {
                     ui.label("No mod data location selected; select one in the File menu.");
                     return;
                 };
-                let write_cheats = |mode: InstallMode| {
-                    for (build_id, cheats) in cheats {
-                        for cheat in cheats.iter().filter(|c| c.checked) {
-                            let path = match mode {
-                                InstallMode::Together(base) => base.to_path_buf(),
-                                InstallMode::Separate(base) => base.join(&cheat.name),
-                            }
-                            .join("cheats");
-                            fs::create_dir_all(&path).ok();
+                let write_cheats = |mode: InstallMode| match mode {
+                    InstallMode::Together(base) => {
+                        let path = base.join("cheats");
+                        fs::create_dir_all(&path).ok();
+                        for (build_id, cheats) in cheats {
                             let Ok(mut file) =
                                 fs::File::create(path.join(format!("{}.txt", build_id)))
                             else {
                                 continue;
                             };
-                            writeln!(file, "[{}]", cheat.name).ok();
-                            for line in &cheat.code {
-                                writeln!(file, "{line}").ok();
+                            for cheat in cheats.iter().filter(|c| c.checked) {
+                                writeln!(file, "[{}]", cheat.name).ok();
+                                for line in &cheat.code {
+                                    writeln!(file, "{}", line).ok();
+                                }
+                                writeln!(file).ok();
                             }
-                            writeln!(file).ok();
+                        }
+                    }
+                    InstallMode::Separate(base) => {
+                        for (build_id, cheats) in cheats {
+                            for cheat in cheats.iter().filter(|c| c.checked) {
+                                let path = base.join(&cheat.name).join("cheats");
+                                fs::create_dir_all(&path).ok();
+                                let Ok(mut file) =
+                                    fs::File::create(path.join(format!("{}.txt", build_id)))
+                                else {
+                                    continue;
+                                };
+                                writeln!(file, "[{}]", cheat.name).ok();
+                                for line in &cheat.code {
+                                    writeln!(file, "{}", line).ok();
+                                }
+                            }
                         }
                     }
                 };
