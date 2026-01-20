@@ -1,11 +1,10 @@
 mod blawar;
-mod chansey;
 mod cheatslips;
-mod gbatemp;
+mod github;
 mod hamlet;
-mod ibnux;
 mod tinfoil;
 
+use github::GithubProvider;
 use std::collections::HashMap;
 
 #[derive(PartialEq)]
@@ -35,11 +34,17 @@ impl CheatSource {
     pub fn provider(&self) -> Box<dyn CheatProvider> {
         match self {
             Self::Blawar => Box::new(blawar::BlawarProvider),
-            Self::Chansey => Box::new(chansey::ChanseyProvider),
+            Self::Chansey => Box::new(GithubProvider::new(
+                "https://api.github.com/repos/ChanseyIsTheBest/NX-60FPS-RES-GFX-Cheats/contents/titles/{}/cheats",
+            )),
             Self::CheatSlips => Box::new(cheatslips::CheatSlipsProvider),
-            Self::GbaTemp => Box::new(gbatemp::GbaTempProvider),
+            Self::GbaTemp => Box::new(GithubProvider::new(
+                "https://api.github.com/repos/exefer/gbatemp-matias3ds-cheats/contents/titles/{}/cheats",
+            )),
             Self::Hamlet => Box::new(hamlet::HamletProvider),
-            Self::Ibnux => Box::new(ibnux::IbnuxProvider),
+            Self::Ibnux => Box::new(GithubProvider::new(
+                "https://api.github.com/repos/ibnux/switch-cheat/contents/atmosphere/titles/{}/cheats",
+            )),
             Self::Tinfoil => Box::new(tinfoil::TinfoilProvider),
         }
     }

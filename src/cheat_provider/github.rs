@@ -4,15 +4,20 @@ use curl::easy::Easy;
 use serde_json::Value;
 use std::collections::HashMap;
 
-pub struct IbnuxProvider;
+pub struct GithubProvider {
+    url_template: &'static str,
+}
 
-impl CheatProvider for IbnuxProvider {
+impl GithubProvider {
+    pub fn new(url_template: &'static str) -> Self {
+        Self { url_template }
+    }
+}
+
+impl CheatProvider for GithubProvider {
     fn get_cheats_for_title(&self, _title_name: &str, title_id: &str) -> Option<CheatMap> {
         let mut easy = Easy::new();
-        let url = format!(
-            "https://api.github.com/repos/ibnux/switch-cheat/contents/atmosphere/titles/{}/cheats",
-            title_id
-        );
+        let url = self.url_template.replace("{}", title_id);
         easy.url(&url).ok()?;
         easy.useragent(env!("CARGO_PKG_NAME")).ok()?;
         let data = easy.without_body().send_with_response::<Value>().ok()?;
