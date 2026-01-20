@@ -11,7 +11,7 @@ There is no persistence by design - storing only the mod data location isn't wor
 - https://github.com/blawar/titledb
 - https://github.com/ChanseyIsTheBest/NX-60FPS-RES-GFX-Cheats
 - https://www.cheatslips.com
-- ~https://gbatemp.net/threads/cheat-codes-ams-and-sx-os-add-and-request.520293/~ (Work in progress)
+- https://gbatemp.net/threads/cheat-codes-ams-and-sx-os-add-and-request.520293/ (via https://github.com/exefer/gbatemp-matias3ds-cheats)
 - https://github.com/HamletDuFromage/switch-cheats-db
 - https://github.com/ibnux/switch-cheat
 - https://tinfoil.io
