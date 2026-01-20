@@ -65,13 +65,19 @@ fn parse_cheat_file(content: &str) -> Vec<Cheat> {
     for line in content.lines() {
         let trimmed = line.trim();
 
-        if let Some(name) = trimmed.strip_prefix('[').and_then(|s| s.strip_suffix(']')) {
+        if let Some(name) = trimmed
+            .strip_prefix('[')
+            .and_then(|s| s.strip_suffix(']'))
+            .map(|s| s.trim())
+        {
             if let Some(name) = current_name.take() {
-                cheats.push(Cheat {
-                    name,
-                    code: current_code,
-                    checked: false,
-                });
+                if !current_code.is_empty() {
+                    cheats.push(Cheat {
+                        name,
+                        code: current_code,
+                        checked: false,
+                    });
+                }
                 current_code = Vec::new();
             }
             current_name = Some(name.to_owned());
@@ -80,7 +86,9 @@ fn parse_cheat_file(content: &str) -> Vec<Cheat> {
         }
     }
 
-    if let Some(name) = current_name {
+    if let Some(name) = current_name
+        && !current_code.is_empty()
+    {
         cheats.push(Cheat {
             name,
             code: current_code,
