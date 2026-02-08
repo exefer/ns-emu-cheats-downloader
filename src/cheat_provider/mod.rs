@@ -4,8 +4,9 @@ mod github;
 mod hamlet;
 mod tinfoil;
 
-use github::GithubProvider;
 use std::collections::HashMap;
+
+use github::GithubProvider;
 
 #[derive(PartialEq)]
 pub enum CheatSource {

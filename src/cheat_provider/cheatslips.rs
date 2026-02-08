@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
+use curl::easy::Easy;
+use scraper::{Html, Selector};
+
 use super::{Cheat, CheatMap, CheatProvider};
 use crate::curl_helper::BodyExt;
 use crate::utils::normalize_title_name;
-use curl::easy::Easy;
-use scraper::{Html, Selector};
-use std::collections::HashMap;
 
 pub struct CheatSlipsProvider;
 

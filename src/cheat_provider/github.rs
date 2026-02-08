@@ -1,8 +1,10 @@
-use super::{CheatMap, CheatProvider, parse_cheat_file};
-use crate::curl_helper::BodyExt;
+use std::collections::HashMap;
+
 use curl::easy::Easy;
 use serde_json::Value;
-use std::collections::HashMap;
+
+use super::{CheatMap, CheatProvider, parse_cheat_file};
+use crate::curl_helper::BodyExt;
 
 pub struct GithubProvider {
     url_template: &'static str,

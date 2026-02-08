@@ -1,5 +1,6 @@
-use crate::utils::strip_html;
 use serde::{Deserialize, Deserializer};
+
+use crate::utils::strip_html;
 
 fn empty_string_as_none<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where

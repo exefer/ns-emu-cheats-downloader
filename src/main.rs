@@ -4,20 +4,19 @@ mod curl_helper;
 mod tinfoil;
 mod utils;
 
+use std::borrow::Cow;
+use std::fs;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex};
+use std::thread;
+
 use cheat_provider::{CheatMap, CheatSource};
 use curl::easy::Easy;
 use curl_helper::BodyExt;
 use eframe::egui;
 use egui::vec2;
 use egui_extras::{Column, TableBuilder};
-use std::{
-    borrow::Cow,
-    fs,
-    io::Write,
-    path::{Path, PathBuf},
-    sync::{Arc, Mutex},
-    thread,
-};
 use tinfoil::{TinfoilRoot, TinfoilTitle};
 
 #[derive(PartialEq)]

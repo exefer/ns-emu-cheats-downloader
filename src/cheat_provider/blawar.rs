@@ -1,8 +1,10 @@
-use super::{Cheat, CheatMap, CheatProvider};
-use crate::curl_helper::BodyExt;
+use std::collections::HashMap;
+
 use curl::easy::Easy;
 use serde::Deserialize;
-use std::collections::HashMap;
+
+use super::{Cheat, CheatMap, CheatProvider};
+use crate::curl_helper::BodyExt;
 
 pub struct BlawarProvider;
 

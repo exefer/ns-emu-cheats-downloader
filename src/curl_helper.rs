@@ -1,8 +1,9 @@
 // Source: https://github.com/rust-lang/promote-release/blob/master/src/curl_helper.rs
 #![allow(dead_code)]
+use std::io::Read;
+
 use anyhow::Context;
 use curl::easy::Easy;
-use std::io::Read;
 
 pub trait BodyExt {
     fn with_body<S>(&mut self, body: S) -> Request<'_, S>;
