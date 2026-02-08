@@ -1,20 +1,4 @@
-pub fn strip_html(input: &str) -> String {
-    let mut result = String::with_capacity(input.len());
-    let mut inside_tag = false;
-
-    for c in input.chars() {
-        match c {
-            '<' => inside_tag = true,
-            '>' => inside_tag = false,
-            _ if !inside_tag => result.push(c),
-            _ => {}
-        }
-    }
-
-    decode_html_entities(&result).trim().to_owned()
-}
-
-fn decode_html_entities(input: &str) -> String {
+pub fn decode_html_entities(input: &str) -> String {
     let mut result = String::with_capacity(input.len());
     let mut chars = input.chars();
 
@@ -54,6 +38,22 @@ fn decode_html_entities(input: &str) -> String {
     }
 
     result
+}
+
+pub fn strip_html(input: &str) -> String {
+    let mut result = String::with_capacity(input.len());
+    let mut inside_tag = false;
+
+    for c in input.chars() {
+        match c {
+            '<' => inside_tag = true,
+            '>' => inside_tag = false,
+            _ if !inside_tag => result.push(c),
+            _ => {}
+        }
+    }
+
+    decode_html_entities(&result).trim().to_owned()
 }
 
 pub fn normalize_title_name(input: &str) -> String {
@@ -103,6 +103,14 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_decode_html_entities() {
+        assert_eq!(decode_html_entities("&amp;"), "&");
+        assert_eq!(decode_html_entities("&lt;&gt;"), "<>");
+        assert_eq!(decode_html_entities("&unknown;"), "&unknown;");
+        assert_eq!(decode_html_entities("plain text"), "plain text");
+    }
+
+    #[test]
     fn test_strip_html() {
         assert_eq!(strip_html("<p>Hello</p>"), "Hello");
         assert_eq!(strip_html("Hello &amp; World"), "Hello & World");
@@ -111,14 +119,6 @@ mod tests {
         assert_eq!(strip_html("&#39;apostrophe&#39;"), "'apostrophe'");
         assert_eq!(strip_html("Caf&#233;"), "Café");
         assert_eq!(strip_html("space&nbsp;here"), "space here");
-    }
-
-    #[test]
-    fn test_decode_html_entities() {
-        assert_eq!(decode_html_entities("&amp;"), "&");
-        assert_eq!(decode_html_entities("&lt;&gt;"), "<>");
-        assert_eq!(decode_html_entities("&unknown;"), "&unknown;");
-        assert_eq!(decode_html_entities("plain text"), "plain text");
     }
 
     #[test]
