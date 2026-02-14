@@ -12,6 +12,7 @@ use std::thread;
 use curl::easy::Easy;
 use curl_helper::BodyExt;
 use eframe::egui;
+use egui_file::{FileDialog, State as FileDialogState};
 use tinfoil::{TinfoilRoot, TinfoilTitle};
 use ui::{CheatManager, DatabaseExplorer};
 
@@ -25,6 +26,7 @@ struct App {
     active_tab: Tab,
     cheat_manager: CheatManager,
     database_explorer: DatabaseExplorer,
+    file_dialog: Option<FileDialog>,
     folder: Option<PathBuf>,
 }
 
@@ -39,6 +41,7 @@ impl App {
             active_tab: Tab::DatabaseExplorer,
             cheat_manager: CheatManager::default(),
             database_explorer: DatabaseExplorer::new(titles),
+            file_dialog: None,
             folder: None,
         }
     }
@@ -60,14 +63,26 @@ impl App {
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
             egui::MenuBar::new().ui(ui, |ui| {
                 ui.menu_button("File", |ui| {
-                    if ui.button("Set Mod Data Location").clicked()
-                        && let Some(path) = rfd::FileDialog::new().pick_folder()
-                    {
-                        self.folder = Some(path);
+                    if ui.button("Set Mod Data Location").clicked() {
+                        let mut dialog = FileDialog::select_folder();
+                        dialog.open();
+                        self.file_dialog = Some(dialog);
                     }
                 });
             });
         });
+        if let Some(dialog) = &mut self.file_dialog {
+            dialog.show(ctx);
+            match dialog.state() {
+                FileDialogState::Selected => {
+                    if let Some(path) = dialog.path() {
+                        self.folder = Some(path.to_path_buf());
+                    }
+                }
+                FileDialogState::Cancelled | FileDialogState::Closed => self.file_dialog = None,
+                _ => {}
+            }
+        }
     }
 
     fn show_tabs(&mut self, ui: &mut egui::Ui) {
