@@ -8,8 +8,9 @@ use std::collections::HashMap;
 
 use github::GithubProvider;
 
-#[derive(PartialEq)]
+#[derive(Default, PartialEq)]
 pub enum CheatSource {
+    #[default]
     Blawar,
     Chansey,
     CheatSlips,
