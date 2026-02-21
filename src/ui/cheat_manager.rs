@@ -19,7 +19,7 @@ pub struct CheatManager {
     pub cheat_source: CheatSource,
     pub build_id: Option<String>,
     pub cheats: Arc<Mutex<Option<CheatMap>>>,
-    pub image_bytes: Arc<Mutex<Option<Vec<u8>>>>,
+    pub icon: Arc<Mutex<Option<Arc<[u8]>>>>,
 }
 
 impl CheatManager {
@@ -47,9 +47,9 @@ impl CheatManager {
         self.title = Some(title);
         self.build_id = None;
         *self.cheats.lock().unwrap() = None;
-        *self.image_bytes.lock().unwrap() = None;
+        *self.icon.lock().unwrap() = None;
 
-        let image_bytes = Arc::clone(&self.image_bytes);
+        let icon = Arc::clone(&self.icon);
 
         thread::spawn(move || {
             let mut easy = Easy::new();
@@ -67,18 +67,18 @@ impl CheatManager {
                     .unwrap();
                 transfer.perform().unwrap();
             }
-            *image_bytes.lock().unwrap() = Some(bytes);
+            *icon.lock().unwrap() = Some(Arc::from(bytes));
         });
     }
 
     fn show_title_info(&mut self, ui: &mut egui::Ui) {
         ui.vertical(|ui| {
             let title = self.title.as_ref().unwrap();
-            if let Some(image_bytes) = &*self.image_bytes.lock().unwrap() {
+            if let Some(icon) = self.icon.lock().unwrap().clone() {
                 ui.add(
                     egui::Image::new(egui::ImageSource::Bytes {
                         uri: Cow::Owned(format!("bytes://{}.jpeg", title.id)),
-                        bytes: egui::load::Bytes::Shared(Arc::from(image_bytes.as_slice())),
+                        bytes: egui::load::Bytes::Shared(icon),
                     })
                     .max_size(vec2(235.0, 235.0)),
                 );
