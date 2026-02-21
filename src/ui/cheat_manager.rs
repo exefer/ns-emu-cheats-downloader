@@ -301,18 +301,18 @@ impl CheatManager {
 
     fn write_cheats_together(base: &Path, cheats: &CheatMap) {
         let path = base.join("cheats");
-        create_dir_all(&path).ok();
+        _ = create_dir_all(&path);
 
         for (build_id, cheats) in cheats {
             let Ok(mut file) = File::create(path.join(format!("{}.txt", build_id))) else {
                 continue;
             };
             for cheat in cheats.iter().filter(|c| c.checked) {
-                writeln!(file, "[{}]", cheat.name).ok();
+                _ = writeln!(file, "[{}]", cheat.name);
                 for line in &cheat.code {
-                    writeln!(file, "{}", line).ok();
+                    _ = writeln!(file, "{}", line);
                 }
-                writeln!(file).ok();
+                _ = writeln!(file);
             }
         }
     }
@@ -321,13 +321,13 @@ impl CheatManager {
         for (build_id, cheats) in cheats {
             for cheat in cheats.iter().filter(|c| c.checked) {
                 let path = base.join(&cheat.name).join("cheats");
-                create_dir_all(&path).ok();
+                _ = create_dir_all(&path);
                 let Ok(mut file) = File::create(path.join(format!("{}.txt", build_id))) else {
                     continue;
                 };
-                writeln!(file, "[{}]", cheat.name).ok();
+                _ = writeln!(file, "[{}]", cheat.name);
                 for line in &cheat.code {
-                    writeln!(file, "{}", line).ok();
+                    _ = writeln!(file, "{}", line);
                 }
             }
         }
