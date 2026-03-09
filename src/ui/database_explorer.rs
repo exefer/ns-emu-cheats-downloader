@@ -59,14 +59,13 @@ impl DatabaseExplorer {
                 });
             })
             .body(|body| {
-                let titles: Vec<_> = if self.filter.is_empty() {
+                let filter = self.filter.as_str();
+                let titles: Vec<_> = if filter.is_empty() {
                     titles.iter().collect()
                 } else {
                     titles
                         .iter()
-                        .filter(|title| {
-                            title.name.contains(&self.filter) || title.id.contains(&self.filter)
-                        })
+                        .filter(|title| title.name.contains(filter) || title.id.contains(filter))
                         .collect()
                 };
 
