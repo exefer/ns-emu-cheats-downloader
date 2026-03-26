@@ -6,11 +6,7 @@ fn empty_string_as_none<'de, D>(deserializer: D) -> Result<Option<String>, D::Er
 where
     D: Deserializer<'de>,
 {
-    let s = Option::<String>::deserialize(deserializer)?;
-    match s {
-        Some(s) if s.is_empty() => Ok(None),
-        other => Ok(other),
-    }
+    Ok(Option::<String>::deserialize(deserializer)?.filter(|s| !s.is_empty()))
 }
 
 fn strip_html_tags<'de, D>(deserializer: D) -> Result<String, D::Error>
