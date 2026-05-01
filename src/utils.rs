@@ -62,11 +62,9 @@ pub fn normalize_title_name(input: &str) -> String {
 
     for ch in input.chars() {
         match ch {
-            ' ' => {
-                if !result.is_empty() && !prev_was_dash {
-                    result.push('-');
-                    prev_was_dash = true;
-                }
+            ' ' if !result.is_empty() && !prev_was_dash => {
+                result.push('-');
+                prev_was_dash = true;
             }
             '®' => {
                 // result.push('r');
