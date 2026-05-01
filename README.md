@@ -6,6 +6,8 @@ This is my first GUI application in Rust and my first time using an immediate mo
 
 There is no persistence by design - storing only the mod data location isn't worth creating a config file.
 
+If you are looking for mods, check out [ns-emu-mod-downloader](https://github.com/exefer/ns-emu-mod-downloader) instead.
+
 ## Supported Providers
 
 - https://github.com/blawar/titledb
