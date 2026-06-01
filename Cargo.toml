@@ -10,21 +10,21 @@ publish = false
 [dependencies]
 anyhow = "1.0.101"
 curl = "0.4.49"
-curl-sys = "0.4.83"
-eframe = { version = "0.33.3", default-features = false, features = [
+curl-sys = "0.4.88"
+eframe = { version = "0.34.3", default-features = false, features = [
   "default_fonts",
   "glow",
   "wayland",
   "x11"
 ] }
-egui_extras = { version = "0.33.3", default-features = false, features = [
+egui_extras = { version = "0.34.3", default-features = false, features = [
   "image"
 ] }
-egui_file = "0.25.0"
-image = { version = "0.25.9", default-features = false, features = ["jpeg"] }
-scraper = "0.25.0"
+egui_file = "0.26.0"
+image = { version = "0.25.10", default-features = false, features = ["jpeg"] }
+scraper = "0.27.0"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.149"
+serde_json = "1.0.150"
 
 [profile.release]
 opt-level = "s"

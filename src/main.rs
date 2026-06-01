@@ -59,8 +59,8 @@ impl App {
         });
     }
 
-    fn show_menu_bar(&mut self, ctx: &egui::Context) {
-        egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
+    fn show_menu_bar(&mut self, ctx: &mut egui::Ui) {
+        egui::Panel::top("menu_bar").show_inside(ctx, |ui| {
             egui::MenuBar::new().ui(ui, |ui| {
                 ui.menu_button("File", |ui| {
                     if ui.button("Set Mod Data Location").clicked() {
@@ -112,10 +112,10 @@ impl App {
 }
 
 impl eframe::App for App {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.show_menu_bar(ctx);
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        self.show_menu_bar(ui);
 
-        egui::CentralPanel::default().show(ctx, |ui| {
+        egui::CentralPanel::default().show_inside(ui, |ui| {
             self.show_tabs(ui);
             self.show_content(ui);
         });
