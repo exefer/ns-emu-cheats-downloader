@@ -124,7 +124,7 @@ impl eframe::App for App {
 
 fn main() {
     let _ = eframe::run_native(
-        concat!(env!("CARGO_PKG_NAME"), " | v", env!("CARGO_PKG_VERSION"),),
+        concat!(env!("CARGO_PKG_NAME"), " v", env!("CARGO_PKG_VERSION")),
         eframe::NativeOptions {
             viewport: egui::ViewportBuilder::default()
                 .with_resizable(true)
