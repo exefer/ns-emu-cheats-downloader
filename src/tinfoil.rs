@@ -35,7 +35,7 @@ fn request_titles() -> anyhow::Result<Vec<TinfoilTitle>> {
 pub fn fetch_icon(title_id: &str) -> Result<Vec<u8>, curl::Error> {
     let mut easy = Easy::new();
     let mut bytes = Vec::new();
-    easy.url(&format!("{BASE_URL}/ti/{title_id}/235/235"))?;
+    easy.url(&format!("{BASE_URL}/ti/{title_id}/256/256"))?;
     easy.useragent(env!("CARGO_PKG_NAME"))?;
     easy.fail_on_error(true)?;
     {
