@@ -5,7 +5,6 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use curl::easy::Easy;
 use eframe::egui;
 use egui::vec2;
 use egui_extras::{Column, TableBuilder};
@@ -52,22 +51,9 @@ impl CheatManager {
         let icon = Arc::clone(&self.icon);
 
         thread::spawn(move || {
-            let mut easy = Easy::new();
-            let mut bytes = Vec::new();
-            easy.url(&format!("https://tinfoil.io/ti/{}/235/235", title_id))
-                .unwrap();
-            easy.useragent(env!("CARGO_PKG_NAME")).unwrap();
-            {
-                let mut transfer = easy.transfer();
-                transfer
-                    .write_function(|data| {
-                        bytes.extend_from_slice(data);
-                        Ok(data.len())
-                    })
-                    .unwrap();
-                transfer.perform().unwrap();
+            if let Ok(bytes) = crate::tinfoil::fetch_icon(&title_id) {
+                *icon.lock().unwrap() = Some(Arc::from(bytes));
             }
-            *icon.lock().unwrap() = Some(Arc::from(bytes));
         });
     }
 

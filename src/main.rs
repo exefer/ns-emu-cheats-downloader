@@ -6,14 +6,9 @@ mod ui;
 mod utils;
 
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
-use std::thread;
 
-use curl::easy::Easy;
-use curl_helper::BodyExt;
 use eframe::egui;
 use egui_file::{FileDialog, State as FileDialogState};
-use tinfoil::{TinfoilRoot, TinfoilTitle};
 use ui::{CheatManager, DatabaseExplorer};
 
 #[derive(PartialEq)]
@@ -32,31 +27,15 @@ struct App {
 
 impl App {
     fn new(cc: &eframe::CreationContext) -> Self {
-        let titles = Arc::new(Mutex::new(Vec::new()));
-        Self::fetch_titles(Arc::clone(&titles));
-
         egui_extras::install_image_loaders(&cc.egui_ctx);
 
         Self {
             active_tab: Tab::DatabaseExplorer,
             cheat_manager: CheatManager::default(),
-            database_explorer: DatabaseExplorer::new(titles),
+            database_explorer: DatabaseExplorer::new(),
             file_dialog: None,
             folder: None,
         }
-    }
-
-    fn fetch_titles(titles: Arc<Mutex<Vec<TinfoilTitle>>>) {
-        thread::spawn(move || {
-            let mut easy = Easy::new();
-            easy.url("https://tinfoil.io/Title/ApiJson/").unwrap();
-            easy.useragent(env!("CARGO_PKG_NAME")).unwrap();
-            *titles.lock().unwrap() = easy
-                .without_body()
-                .send_with_response::<TinfoilRoot>()
-                .unwrap()
-                .data;
-        });
     }
 
     fn show_menu_bar(&mut self, ctx: &mut egui::Ui) {

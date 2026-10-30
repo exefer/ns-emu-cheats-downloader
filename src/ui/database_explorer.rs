@@ -3,18 +3,24 @@ use std::sync::{Arc, Mutex};
 use eframe::egui;
 use egui_extras::{Column, TableBuilder};
 
-use crate::tinfoil::TinfoilTitle;
+use crate::tinfoil::{BASE_URL, TinfoilTitle, fetch_titles};
 
 pub struct DatabaseExplorer {
     pub filter: String,
     pub titles: Arc<Mutex<Vec<TinfoilTitle>>>,
+    pub error: Arc<Mutex<Option<String>>>,
 }
 
 impl DatabaseExplorer {
-    pub fn new(titles: Arc<Mutex<Vec<TinfoilTitle>>>) -> Self {
+    pub fn new() -> Self {
+        let titles = Arc::new(Mutex::new(Vec::new()));
+        let error = Arc::new(Mutex::new(None));
+        fetch_titles(Arc::clone(&titles), Arc::clone(&error));
+
         Self {
             filter: String::new(),
             titles,
+            error,
         }
     }
 
@@ -22,12 +28,31 @@ impl DatabaseExplorer {
         let titles = self.titles.lock().unwrap();
 
         if titles.is_empty() {
-            ui.with_layout(
-                egui::Layout::centered_and_justified(egui::Direction::TopDown),
-                |ui| {
-                    ui.add(egui::Spinner::new().size(50.0));
-                },
-            );
+            let error = self.error.lock().unwrap().clone();
+            match error {
+                None => {
+                    ui.with_layout(
+                        egui::Layout::centered_and_justified(egui::Direction::TopDown),
+                        |ui| {
+                            ui.add(egui::Spinner::new().size(50.0));
+                        },
+                    );
+                }
+                Some(message) => {
+                    ui.vertical_centered(|ui| {
+                        ui.add_space(ui.available_height() / 3.0);
+                        ui.heading("Couldn't load the title database");
+                        ui.label(format!(
+                            "Check your connection, or whether {BASE_URL} is reachable."
+                        ));
+                        ui.label(message);
+                        ui.add_space(8.0);
+                        if ui.button("Retry").clicked() {
+                            fetch_titles(Arc::clone(&self.titles), Arc::clone(&self.error));
+                        }
+                    });
+                }
+            }
             return None;
         }
 

@@ -11,7 +11,7 @@ pub struct TinfoilProvider;
 impl CheatProvider for TinfoilProvider {
     fn get_cheats_for_title(&self, _title_name: &str, title_id: &str) -> Option<CheatMap> {
         let mut easy = Easy::new();
-        let url = format!("https://tinfoil.io/Title/{}", title_id);
+        let url = format!("{}/Title/{}", crate::tinfoil::BASE_URL, title_id);
         easy.url(&url).ok()?;
         easy.useragent(env!("CARGO_PKG_NAME")).ok()?;
         let html = easy.without_body().text().ok()?;
