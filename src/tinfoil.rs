@@ -8,7 +8,7 @@ use serde::{Deserialize, Deserializer};
 use crate::curl_helper::BodyExt;
 use crate::utils::strip_html;
 
-pub const BASE_URL: &str = "https://tinfoil.io";
+pub const BASE_URL: &str = "https://tinfoil.media";
 
 pub fn fetch_titles(titles: Arc<Mutex<Vec<TinfoilTitle>>>, error: Arc<Mutex<Option<String>>>) {
     *error.lock().unwrap() = None;
