@@ -38,8 +38,8 @@ impl App {
         }
     }
 
-    fn show_menu_bar(&mut self, ctx: &mut egui::Ui) {
-        egui::Panel::top("menu_bar").show_inside(ctx, |ui| {
+    fn show_menu_bar(&mut self, ui: &mut egui::Ui) {
+        egui::Panel::top("menu_bar").show(ui, |ui| {
             egui::MenuBar::new().ui(ui, |ui| {
                 ui.menu_button("File", |ui| {
                     if ui.button("Set Mod Data Location").clicked() {
@@ -51,7 +51,7 @@ impl App {
             });
         });
         if let Some(dialog) = &mut self.file_dialog {
-            dialog.show(ctx);
+            dialog.show(ui);
             match dialog.state() {
                 FileDialogState::Selected => {
                     if let Some(path) = dialog.path() {
@@ -94,7 +94,7 @@ impl eframe::App for App {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         self.show_menu_bar(ui);
 
-        egui::CentralPanel::default().show_inside(ui, |ui| {
+        egui::CentralPanel::default().show(ui, |ui| {
             self.show_tabs(ui);
             self.show_content(ui);
         });
