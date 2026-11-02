@@ -39,17 +39,18 @@ impl DatabaseExplorer {
                     );
                 }
                 Some(message) => {
-                    ui.vertical_centered(|ui| {
-                        ui.add_space(ui.available_height() / 3.0);
-                        ui.heading("Couldn't load the title database");
-                        ui.label(format!(
-                            "Check your connection, or whether {BASE_URL} is reachable."
-                        ));
-                        ui.label(message);
-                        ui.add_space(8.0);
-                        if ui.button("Retry").clicked() {
-                            fetch_titles(Arc::clone(&self.titles), Arc::clone(&self.error));
-                        }
+                    egui::Aligned::new(egui::Align2::CENTER_CENTER).show(ui, |ui| {
+                        ui.vertical_centered(|ui| {
+                            ui.heading("Couldn't load the title database");
+                            ui.label(format!(
+                                "Check your connection, or whether {BASE_URL} is reachable."
+                            ));
+                            ui.label(message);
+                            ui.add_space(8.0);
+                            if ui.button("Retry").clicked() {
+                                fetch_titles(Arc::clone(&self.titles), Arc::clone(&self.error));
+                            }
+                        });
                     });
                 }
             }
