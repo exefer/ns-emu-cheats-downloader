@@ -29,30 +29,27 @@ impl DatabaseExplorer {
 
         if titles.is_empty() {
             let error = self.error.lock().unwrap().clone();
-            match error {
-                None => {
-                    ui.with_layout(
-                        egui::Layout::centered_and_justified(egui::Direction::TopDown),
-                        |ui| {
-                            ui.add(egui::Spinner::new().size(50.0));
-                        },
-                    );
-                }
-                Some(message) => {
-                    egui::Aligned::new(egui::Align2::CENTER_CENTER).show(ui, |ui| {
-                        ui.vertical_centered(|ui| {
-                            ui.heading("Couldn't load the title database");
-                            ui.label(format!(
-                                "Check your connection, or whether {BASE_URL} is reachable."
-                            ));
-                            ui.label(message);
-                            ui.add_space(8.0);
-                            if ui.button("Retry").clicked() {
-                                fetch_titles(Arc::clone(&self.titles), Arc::clone(&self.error));
-                            }
-                        });
+            if let Some(message) = error {
+                egui::Aligned::new(egui::Align2::CENTER_CENTER).show(ui, |ui| {
+                    ui.vertical_centered(|ui| {
+                        ui.heading("Couldn't load the title database");
+                        ui.label(format!(
+                            "Check your connection, or whether {BASE_URL} is reachable."
+                        ));
+                        ui.label(message);
+                        ui.add_space(8.0);
+                        if ui.button("Retry").clicked() {
+                            fetch_titles(Arc::clone(&self.titles), Arc::clone(&self.error));
+                        }
                     });
-                }
+                });
+            } else {
+                ui.with_layout(
+                    egui::Layout::centered_and_justified(egui::Direction::TopDown),
+                    |ui| {
+                        ui.add(egui::Spinner::new().size(50.0));
+                    },
+                );
             }
             return None;
         }
